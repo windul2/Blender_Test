@@ -6,7 +6,7 @@ import math
 
 # ---------- 기본 설정 ----------
 FPS = 24
-DURATION_SEC = 5
+DURATION_SEC = 30
 FRAME_END = FPS * DURATION_SEC          # 120 프레임
 TEXT = "GOAL SURVIVOR"                   # 원하는 문구로 변경
 NEON_CYAN = (0.0, 0.9, 1.0, 1.0)
