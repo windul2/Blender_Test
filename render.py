@@ -143,7 +143,7 @@ tree.links.new(glare.outputs['Image'], comp.inputs['Image'])
 # ---------- 렌더 설정 (Cycles CPU, MP4 출력) ----------
 scene.render.engine = 'CYCLES'
 scene.cycles.device = 'CPU'
-scene.cycles.samples = 32
+scene.cycles.samples = 4
 scene.cycles.use_denoising = True
 scene.cycles.denoiser = 'OPENIMAGEDENOISE'
 
