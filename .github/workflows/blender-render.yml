@@ -1,1 +1,52 @@
+# .github/workflows/blender-render.yml
+# 모바일에서 Actions 탭 > Run workflow 버튼으로 실행 가능
+name: Blender Render MP4
 
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'render.py'
+      - '.github/workflows/blender-render.yml'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system libs (headless Blender 의존성)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libxi6 libxxf86vm1 libxfixes3 libxrender1 \
+            libgl1 libxkbcommon0 libsm6 libice6
+
+      - name: Cache Blender
+        id: cache-blender
+        uses: actions/cache@v4
+        with:
+          path: blender
+          key: blender-4.2.3-linux-x64
+
+      - name: Download Blender 4.2 LTS
+        if: steps.cache-blender.outputs.cache-hit != 'true'
+        run: |
+          wget -q https://download.blender.org/release/Blender4.2/blender-4.2.3-linux-x64.tar.xz
+          mkdir -p blender
+          tar -xf blender-4.2.3-linux-x64.tar.xz -C blender --strip-components=1
+          rm blender-4.2.3-linux-x64.tar.xz
+
+      - name: Render animation (headless)
+        run: |
+          mkdir -p output
+          ./blender/blender -b --factory-startup -P render.py
+
+      - name: Upload MP4 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neon-intro-mp4
+          path: output/*.mp4
+          retention-days: 14
